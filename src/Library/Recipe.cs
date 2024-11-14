@@ -11,6 +11,9 @@ namespace Full_GRASP_And_SOLID
 {
     public class Recipe : IRecipeContent // Modificado por DIP
     {
+        private bool cooked = false;
+        public bool Cooked { get => this.cooked; }
+        
         // Cambiado por OCP
         private IList<BaseStep> steps = new List<BaseStep>();
 
@@ -62,5 +65,29 @@ namespace Full_GRASP_And_SOLID
 
             return result;
         }
+
+        public int GetCookTime()
+        {
+            int total = 0;
+            foreach (var steppo in this.steps)
+            {
+                total += steppo.Time;
+            }
+
+            return total;
+        }
+
+        public void Cook()
+        {
+            Adapter chorro = new Adapter(this);
+            CountdownTimer conta = new CountdownTimer(); 
+            conta.Register(GetCookTime(), chorro);
+        }
+
+        public void SetAsCooked()
+        {
+            this.cooked = true;
+        }
+        
     }
 }
